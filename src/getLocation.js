@@ -1,4 +1,4 @@
-// import fs from 'fs'
+import fs from 'fs'
 import Tesseract from 'tesseract.js'
 import screenshot from 'screenshot-desktop'
 import sharp from 'sharp'
@@ -9,12 +9,15 @@ export default async function getLocation() {
   // console.log(displays[0])
 
   const image = await screenshot({
-    screen: displays[0].id
+    screen: displays[0].id,
+    format: 'png'
   })
+  
+  // fs.writeFile('display.png', image, (err) => { })
 
   const croppedImage = await sharp(image).extract({
-    width: 360, height: 40, top: 0, left: 2200
-  }).toBuffer()
+    width: 260, height: 16, top: 19, left: 2295
+  }).negate({ alpha: false }).blur().threshold(100).sharpen(10).toBuffer()
 
   // fs.writeFile('test.png', croppedImage, (err) => {})
 
@@ -24,14 +27,16 @@ export default async function getLocation() {
     // { logger: m => console.log(m) }
   )
 
-  const regexp = /\[(\d+.\d+), (\d+.\d+), (\d+.\d+)\]/
+  console.log(tess.data.text)
+
+  const regexp = /(\d{1,4}\.\d{3}), (\d{1,4}\.\d{3}), (\d{1,4}\.\d{3})/
   const match = tess.data.text.match(regexp)
 
   try {
     return {
-        x: match[1],
-        y: match[2],
-        z: match[3]
+        x: parseFloat(match[1]),
+        y: parseFloat(match[2]),
+        z: parseFloat(match[3])
     }
   } catch (error) {
     return null

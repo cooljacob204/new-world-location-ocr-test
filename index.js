@@ -3,7 +3,8 @@ import parseLocation from './src/getLocation.js'
 var location
 
 function mainLoop(){
-  parseLocation('./image.png').then(results => {
+  parseLocation().then(results => {
+    // console.log(results)
     location = results || location
     mainLoop()
   })
