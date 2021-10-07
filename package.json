@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "screenshot-desktop": "^1.12.7",
+    "sharp": "^0.29.1",
+    "tesseract.js": "^2.1.5"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "type": "module"
+}
